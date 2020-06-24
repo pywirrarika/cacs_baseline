@@ -21,13 +21,14 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if args.task in ("tagging"):
-        print("Loading model and data")
-        with open(args.model, "rb") as F:
-            model = pickle.load(F)
-        with open(args.data_file, "rb") as F:
-            data = pickle.load(F)
+    print("Loading model and data")
+    with open(args.model, "rb") as F:
+        model = pickle.load(F)
+    with open(args.data_file, "rb") as F:
+        data = pickle.load(F)
 
+
+    if args.task in ("tagging"):
 
         print("Predicting")
         F = open(args.output_file, "w")
@@ -46,4 +47,17 @@ if __name__ == "__main__":
         print("Acc.:", round(accuracy(results)*100,2), "%")
 
     else:
-        pass
+        Y_gold = data.data[args.data_split]
+        hyp = model.predict_split(data, args.data_split)
+        correct = 0
+        total = len(Y_gold)
+        print("Reference:", len(Y_gold), "Hypotesis", len(hyp))
+
+        for g, h in zip(Y_gold, hyp):
+            if g[1] == h:
+                correct += 1
+        results = correct/total
+
+        print("Acc.:", round(results*100,2), "%")
+
+

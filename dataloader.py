@@ -1,3 +1,62 @@
+class ClassifyData:
+    def __init__(self, args):
+        self.args = args
+        self.label_column = args.label_column
+        self.text_column = args.text_column
+        self.row_number = ''
+        self.data = dict()
+        self.file_path = dict()
+
+        if args.dev:
+            self.data['dev'] = list()
+            self.file_path['dev'] = args.dev,
+
+        if args.train:
+            self.data['train'] = list()
+            self.file_path['train'] = args.train,
+
+        if args.test:
+            self.data['test'] = list()
+            self.file_path['test'] = args.test,
+
+        self.print_args()
+
+        print("Loading datasets: ")
+        for key in self.data.keys():
+            print(" * ", key)
+            self.data[key] = self._load(self.file_path[key])
+
+
+    def _load(self, file_name):
+        """
+        This function loads the dataset and returns a parsed list of lists
+        """
+        print("Openining", file_name)
+        with open(file_name[0]) as F:
+            return self._parse(F)
+
+    def _parse(self, data):
+        instance = list()
+
+        for line in data:
+            if line.startswith("#"):
+                continue
+
+            line = line.strip().split("\t")
+
+            text = line[self.text_column].lower().split()
+            label = line[self.label_column]
+
+            instance.append((text, label))
+
+        return instance
+
+    def print_args(self):
+        options = vars(self.args)
+        print("Used arguemnts:")
+        for opt, arg in options.items():
+            print(opt, ":", arg)
+
 
 class TaggingData:
     def __init__(self, args):
@@ -14,7 +73,7 @@ class TaggingData:
 
         if args.test:
             self.data['test'] = list()
-            self.file_path['test'] = args.train,
+            self.file_path['test'] = args.test
 
         self.print_args()
         print("Loading datasets: ")

@@ -16,7 +16,7 @@ usage: train.py [-h] -tk {tagging,classification}
 ```
 Example:
 ```
-python train.py --task classification --train /home/users2/magerml/share/cs_datasets/sentiment/es-en/train.tsv --dev /home/users2/magerml/share/cs_datasets/sentiment/es-en/dev.tsv  --model model_classify.bin --data_file data_file_classify.bin -txc 2 -lc 1
+python train.py --task classification --train es-en/train.tsv --dev es-en/dev.tsv  --model model_classify.bin --data_file data_file_classify.bin -txc 2 -lc 1
 ```
 
 For prediction, you only need to specify the binary data file, the model data file, task, and output file.

@@ -41,9 +41,12 @@ class ClassifyData:
         for line in data:
             if line.startswith("#"):
                 continue
+            if not line.strip():
+                continue
 
             line = line.strip().split("\t")
 
+            print(self.label_column, line)
             text = line[self.text_column].lower().split()
             label = line[self.label_column]
 

@@ -12,7 +12,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('-tk', '--task', choices=task_types,
                         required=True, help="Task we are trining")
-    parser.add_argument('-tc', '--token_column (for tagging)', type=int,
+    parser.add_argument('-tc', '--token_column', type=int,
                         help="Set the number of the column where the \
                         tags are set", default="2", required=False)
     parser.add_argument('-lc', '--label_column', type=int, help="Set the\
@@ -25,8 +25,7 @@ if __name__ == "__main__":
     parser.add_argument('--test', help="Test file", default="")
     parser.add_argument('--dev', help="Development set",
                         required=True)
-    parser.add_argument('--sentence_boundry (for tagging)',
-                        choices=sentence_boundry,
+    parser.add_argument('--sentence_boundry', choices=sentence_boundry,
                         help="How to split sentences")
     parser.add_argument('--new_line_column_number', type=int,
                         help="Specfiy if --sentence_boundary=new_row_number")
@@ -36,6 +35,8 @@ if __name__ == "__main__":
                         required=True)
 
     args = parser.parse_args()
+    for arg in vars(args):
+        print(arg, getattr(args, arg))
 
     if args.task in ("tagging"):
 

@@ -76,7 +76,7 @@ class TaggingData:
 
         if args.test:
             self.data['test'] = list()
-            self.file_path['test'] = args.test
+            file_paths['test'] = args.test
 
         self.print_args()
         print("Loading datasets: ")
@@ -102,25 +102,31 @@ class TaggingData:
         instance = list()
         for line in data:
             line = line.strip().split("\t")
+            new_line_flag, skip_line_flag = self._end_of_sentence(line)
+            if new_line_flag:
+                parsed.append(instance)
+                instance = list()
+                if skip_line_flag:
+                    continue
+
             token = line[self.token_column]
             label = line[self.label_column]
 
+
             instance.append((token, label))
 
-            if self._end_of_sentence(line):
-                parsed.append(instance)
-                instance = list()
+
         return parsed
 
     def _end_of_sentence(self, line):
         if self.args.sentence_boundry == "empty_line":
-            if not line:
-                return True
+            if not line[0]:
+                return True, True
         if self.args.sentence_boundry == "new_row_number":
             if line[self.args.new_line_column_number] != self.row_number:
                 self.row_number = line[self.args.new_line_column_number]
-                return True
-        return False
+                return True, False
+        return False, False
 
     def print_args(self):
         options = vars(self.args)
